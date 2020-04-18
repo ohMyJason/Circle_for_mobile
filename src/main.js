@@ -5,9 +5,11 @@ import './assets/reset.css'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import { Form, Notify, Tabbar, TabbarItem, Col, Row, Icon, Sticky, Cell, CellGroup, Button, List, PullRefresh, Grid, GridItem, Image, Overlay, Dialog, Divider, Tab, Tabs, NavBar, Toast, Field, Tag, Uploader, Search } from 'vant'
+import { Form, Notify, Tabbar, TabbarItem, Col, Row, Icon, Sticky, Cell, CellGroup, Button, List, PullRefresh, Grid, GridItem, Image, Overlay, Dialog, Divider, Tab, Tabs, NavBar, Toast, Field, Tag, Uploader, Search, Picker, Popup } from 'vant'
 import Router from 'vue-router'
 
+Vue.use(Popup)
+Vue.use(Picker)
 Vue.use(Search)
 Vue.use(Uploader)
 Vue.use(Tag)
