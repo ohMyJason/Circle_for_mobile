@@ -16,6 +16,12 @@ import Fans from '@/components/Fans'
 import PublishNews from '@/components/PublishNews'
 import SearchPage from '@/components/SearchPage'
 import CircleList from '@/components/CircleList'
+import BlogItem from '@/components/BlogItem'
+import OtherUserHome from '@/components/OtherUserHome'
+import CircleItem from '@/components/CircleItem'
+import OtherFans from '@/components/OtherFans'
+import OtherFollows from '@/components/OtherFollows'
+import UserAgreement from '@/components/UserAgreement'
 
 Vue.use(Router)
 
@@ -57,7 +63,10 @@ export default new Router({
     }, {
       path: '/UserHome',
       name: 'UserHome',
-      component: UserHome
+      component: UserHome,
+      meta: {
+        keepAlive: true // 此组件需要被缓存
+      }
     }, {
       path: '/Setting',
       name: 'Setting',
@@ -86,6 +95,30 @@ export default new Router({
       path: '/CircleList',
       name: 'CircleList',
       component: CircleList
+    }, {
+      path: '/BlogItem',
+      name: 'BlogItem',
+      component: BlogItem
+    }, {
+      path: '/OtherUserHome',
+      name: 'OtherUserHome',
+      component: OtherUserHome
+    }, {
+      path: '/CircleItem',
+      name: 'CircleItem',
+      component: CircleItem
+    }, {
+      path: '/OtherFans',
+      name: 'OtherFans',
+      component: OtherFans
+    }, {
+      path: '/OtherFollows',
+      name: 'OtherFollows',
+      component: OtherFollows
+    }, {
+      path: '/UserAgreement',
+      name: 'UserAgreement',
+      component: UserAgreement
     }
   ]
 })

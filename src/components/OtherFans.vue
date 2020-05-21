@@ -1,11 +1,11 @@
 <template>
   <div style="background-color: #f2f2f2">
     <van-nav-bar
-      title="我关注的人"
-      left-text="返回"
+      title="关注Ta的人"
       left-arrow
       fixed
       @click-left="onClickLeft"
+      @click-right="onClickRight"
     />
     <div style="margin: 0.44rem 0 0 0">
       <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -15,9 +15,9 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <div v-for="(item,index) in blogerList" :key="index" style="margin: 0.1rem 0 0 0;background-color: white" >
+          <div v-for="(item,index) in fansList" :key="index" style="margin: 0.1rem 0 0 0;background-color: white">
             <van-row>
-              <van-col span="4" @click="toBloggerHome(item.bloggerId)">
+              <van-col span="4">
                 <van-image
                   round
                   width="0.4rem"
@@ -25,14 +25,15 @@
                   v-bind:src="item.avatarUrl"
                   style="margin: 0.1rem 0 0.1rem 0.1rem"
                 />
-              </van-col >
-              <van-col span="15" style="padding: 0.1rem 0 0 0" @click="toBloggerHome(item.bloggerId)">
-                <van-row style="margin: 0 0 0 0.1rem;"><span style="font-size: 0.14rem">{{item.bloggerName}}</span></van-row>
-                <van-row style="margin: 0.05rem 0 0 0.1rem;"><span style="font-size: 0.1rem;color: #7e8c8d;" >{{item.birthday+''+item.address}}</span>
+              </van-col>
+              <van-col span="15" style="padding: 0.1rem 0 0 0">
+                <van-row style="margin: 0 0 0 0.1rem;"><span style="font-size: 0.14rem">{{item.fansName}}</span></van-row>
+                <van-row style="margin: 0.05rem 0 0 0.1rem;"><span style="font-size: 0.1rem;color: #7e8c8d;" >{{item.birthday}}</span>
                 </van-row>
               </van-col>
-              <van-col span="4" style="margin: 0.15rem 0 0 0" @click="cancelFollow(item.bloggerId)">
-                <van-button round type="info" size="small" color="#3C827E">已关注</van-button>
+              <van-col span="4" style="margin: 0.15rem 0 0 0">
+                <!--<van-button round type="info" size="small" color="#3C827E" v-if="item.flag==0" @click="follow(item.fansId)">已关注</van-button>-->
+                <!--<van-button round type="info" size="small" color="#D7D7DF" v-if="item.flag==1" @click="follow(item.fansId)">未关注</van-button>-->
               </van-col>
             </van-row>
           </div>
@@ -46,31 +47,33 @@
 
 <script>
 export default {
-  name: 'Follows',
+  name: 'OtherFans',
   data () {
     return {
-      blogerList: [],
+      fansList: [],
       loading: false,
       finished: false,
       refreshing: false,
-      page: 1
+      page: 1,
+      userId: 2
     }
   },
   methods: {
     onLoad () {
       if (this.refreshing) {
-        this.blogerList = []
+        this.fansList = []
         this.refreshing = false
       }
 
       this.$http
-        .post(`userInfo/getAllBloggerSelf`, this.$qs.stringify({
+        .post(`userInfo/getAllFansOthers`, this.$qs.stringify({
           page: this.page,
-          size: 10
+          size: 10,
+          userId: this.userId
         }))
         .then(res => {
           if (res.data.code === 0) {
-            this.blogerList = this.blogerList.concat(res.data.data)
+            this.fansList = this.fansList.concat(res.data.data)
             this.page++
           } else {
             this.Notify({ type: 'danger', message: res.data.msg })
@@ -91,20 +94,20 @@ export default {
     onClickLeft () {
       this.$router.go(-1)
     },
-    toBloggerHome (bloggerId) {
-      this.$router.push({path: '/OtherUserHome', query: {userId: bloggerId}})
-    },
-    cancelFollow (bloggerId) {
+    onClickRight () {},
+    follow (fansId) {
       this.$http
         .post(`userInfo/addConcernOrSub`, this.$qs.stringify({
-          userId: bloggerId
+          userId: fansId
         }))
         .then(res => {
           if (res.data.code === 0) {
-            this.Notify({ type: 'success', message: '取消关注了(๑•́ ₃•̀๑) ' })
+            this.Notify({ type: 'success', message: '关注了 (ฅ´ω`ฅ) ' })
+            setTimeout(() => {
+              this.$router.go(0)
+            }, 1000)
           } else {
             this.Notify({ type: 'danger', message: res.data.msg + '了(๑•́ ₃•̀๑)' })
-            // this.blogerList.splice(index, index)
             setTimeout(() => {
               this.$router.go(0)
             }, 1000)
@@ -112,6 +115,9 @@ export default {
           console.log(res)
         })
     }
+  },
+  created () {
+    this.userId = this.$route.query.userId
   }
 }
 </script>

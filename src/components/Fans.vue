@@ -15,7 +15,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <div v-for="(item,index) in list" :key="index" style="margin: 0.1rem 0 0 0;background-color: white">
+          <div v-for="(item,index) in fansList" :key="index" style="margin: 0.1rem 0 0 0;background-color: white">
             <van-row>
               <van-col span="4">
                 <van-image
@@ -27,12 +27,13 @@
                 />
               </van-col>
               <van-col span="15" style="padding: 0.1rem 0 0 0">
-                <van-row style="margin: 0 0 0 0.1rem;"><span style="font-size: 0.14rem">{{item.userName}}</span></van-row>
-                <van-row style="margin: 0.05rem 0 0 0.1rem;"><span style="font-size: 0.1rem;color: #7e8c8d;" v-html="item.letterContent">{{item.letterContent}}</span>
+                <van-row style="margin: 0 0 0 0.1rem;"><span style="font-size: 0.14rem">{{item.fansName}}</span></van-row>
+                <van-row style="margin: 0.05rem 0 0 0.1rem;"><span style="font-size: 0.1rem;color: #7e8c8d;" >{{item.birthday}}</span>
                 </van-row>
               </van-col>
               <van-col span="4" style="margin: 0.15rem 0 0 0">
-                <van-button round type="info" size="small" color="#3C827E">已关注</van-button>
+                <van-button round type="info" size="small" color="#3C827E" v-if="item.flag==0" @click="follow(item.fansId)">已关注</van-button>
+                <van-button round type="info" size="small" color="#D7D7DF" v-if="item.flag==1" @click="follow(item.fansId)">未关注</van-button>
               </van-col>
             </van-row>
           </div>
@@ -49,48 +50,69 @@ export default {
   name: 'Fans',
   data () {
     return {
-      list: [],
+      fansList: [],
       loading: false,
       finished: false,
-      refreshing: false
+      refreshing: false,
+      page: 1
     }
   },
   methods: {
     onLoad () {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-        for (let i = 0; i < 10; i++) {
-          this.list.push({
-            avatarUrl: '//47.98.46.243:8080/userImg/20190921015211_avatar5.png',
-            letterContent: '你好呀',
-            userName: '隔岸观火',
-            userId: 1,
-            sendTime: '2020-04-12 17:54:48'
-          })
-        }
-        this.loading = false
+      if (this.refreshing) {
+        this.fansList = []
+        this.refreshing = false
+      }
 
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
+      this.$http
+        .post(`userInfo/getAllFansSelf`, this.$qs.stringify({
+          page: this.page,
+          size: 10
+        }))
+        .then(res => {
+          if (res.data.code === 0) {
+            this.fansList = this.fansList.concat(res.data.data)
+            this.page++
+          } else {
+            this.Notify({ type: 'danger', message: res.data.msg })
+          }
+          console.log(res)
+        })
+      this.loading = false
     },
     onRefresh () {
       // 清空列表数据
       this.finished = false
-
+      this.page = 1
       // 重新加载数据
       // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
       this.onLoad()
     },
     onClickLeft () {
-      this.$router.push({path: '/UserHome'})
+      this.$router.go(-1)
     },
-    onClickRight () {}
+    onClickRight () {},
+    follow (fansId) {
+      this.$http
+        .post(`userInfo/addConcernOrSub`, this.$qs.stringify({
+          userId: fansId
+        }))
+        .then(res => {
+          if (res.data.code === 0) {
+            this.Notify({ type: 'success', message: '关注了 (ฅ´ω`ฅ) ' })
+            setTimeout(() => {
+              this.$router.go(0)
+            }, 1000)
+          } else {
+            this.Notify({ type: 'danger', message: res.data.msg + '了(๑•́ ₃•̀๑)' })
+            setTimeout(() => {
+              this.$router.go(0)
+            }, 1000)
+          }
+          console.log(res)
+        })
+    }
   }
 }
 </script>

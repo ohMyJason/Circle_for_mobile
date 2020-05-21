@@ -13,7 +13,7 @@
       <van-sticky >
         <form action="/">
           <van-search
-            v-model="value"
+            v-model="blogContent"
             show-action
             placeholder="请输入搜索关键词"
             @search="onSearch"
@@ -21,34 +21,35 @@
           />
         </form>
       </van-sticky>
-      <UserNews></UserNews>
+      <UserNews :key="timer" :blogListType="'bySearch'" :targetBlogContent="this.blogContent"></UserNews>
     </div>
 
   </div>
 </template>
 
 <script>
-import { Toast } from 'vant'
+
 import UserNews from './UserNews'
 export default {
   name: 'SearchPage',
   components: {UserNews},
   data () {
     return {
-      value: ''
+      blogContent: '',
+      timer: ''
     }
   },
   methods: {
     onClickLeft () {
-      this.$router.push({path: '/MainIndex'})
+      this.$router.go(-1)
     },
     onClickRight () {
     },
-    onSearch (val) {
-      Toast(val)
+    onSearch () {
+      this.timer = new Date().getTime()
+      console.log('search·')
     },
     onCancel () {
-      Toast('取消')
     }
   }
 }

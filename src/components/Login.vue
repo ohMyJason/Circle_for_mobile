@@ -11,8 +11,8 @@
           v-model="username"
           name="用户名"
           label="用户名"
-          placeholder="用户名"
-          :rules="[{ required: true, message: '请填写用户名' }]"
+          placeholder="用户名/手机号/邮箱号"
+          :rules="[{ required: true, message: '请填写用户名/手机号/邮箱号' }]"
         />
         <van-field
           v-model="password"
@@ -29,7 +29,7 @@
           </van-button>
 
         </div><div style="margin: 16px;height: 0.3rem;border-radius: 0.2rem;line-height: 0.27rem;text-align: center">
-          <van-button round block color="#387d7b"  @click="toLogin"> 注册
+          <van-button round block color="#387d7b"  @click="toRegistered"> 注册
           </van-button>
 
         </div>
@@ -60,8 +60,23 @@ export default {
   methods: {
     onSubmit (values) {
       console.log('submit', values)
+      this.$http
+        .post(`userLogin/login`, this.$qs.stringify({
+          loginName: this.username,
+          password: this.password
+        }))
+        .then(res => {
+          if (res.data.code === 0) {
+            this.$cookies.set('token', res.data.data.token, -1)
+            this.$cookies.set('userId', res.data.data.user.userId, -1)
+            this.$router.push({ path: '/MainIndex' }) // post成功后跳到登录界面
+          } else {
+            this.Notify({ type: 'danger', message: res.data.msg })
+          }
+          console.log(res)
+        })
     },
-    toLogin () {
+    toRegistered () {
       this.$router.push({path: '/Registered'})
     }
   }

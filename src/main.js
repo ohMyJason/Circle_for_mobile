@@ -5,9 +5,28 @@ import './assets/reset.css'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import { Form, Notify, Tabbar, TabbarItem, Col, Row, Icon, Sticky, Cell, CellGroup, Button, List, PullRefresh, Grid, GridItem, Image, Overlay, Dialog, Divider, Tab, Tabs, NavBar, Toast, Field, Tag, Uploader, Search, Picker, Popup } from 'vant'
+import { Form, Notify, Tabbar, TabbarItem, Col, Row, Icon, Sticky, Cell, CellGroup, Button, List, PullRefresh, Grid, GridItem, Image, Overlay, Dialog, Divider, Tab, Tabs, NavBar, Toast, Field, Tag, Uploader, Search, Picker, Popup, Calendar, ImagePreview, Loading } from 'vant'
 import Router from 'vue-router'
+import http from './http'
+import qs from 'qs'
+import VueCookies from 'vue-cookies'
 
+Vue.use(Loading)
+Vue.use(VueCookies)
+Vue.use(Notify)
+Vue.use(ImagePreview)
+
+Vue.prototype.$http = http
+Vue.prototype.$qs = qs
+Vue.prototype.Notify = Notify
+Vue.prototype.ImagePreview = ImagePreview
+// axios
+
+Vue.config.productionTip = false
+
+// 全局注册
+
+Vue.use(Calendar)
 Vue.use(Popup)
 Vue.use(Picker)
 Vue.use(Search)

@@ -9,10 +9,10 @@
       <van-list
         v-model="loading"
         :finished="finished"
-        finished-text="没有更多了"
+        finished-text=""
         @load="onLoad"
       >
-        <div v-for="(item,index) in list" :key="index" style="margin: 0 0 0.1rem 0;background-color: white">
+        <div v-for="(item,index) in list" :key="index" style="margin: 0 0 0.1rem 0;background-color: white" @click="toLetterItem(item.userName,item.avatarUrl)">
           <van-row>
             <van-col span="4">
               <van-image
@@ -55,26 +55,22 @@ export default {
   },
   methods: {
     onLoad () {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-        for (let i = 0; i < 10; i++) {
-          this.list.push({
-            avatarUrl: '//47.98.46.243:8080/userImg/20190921015211_avatar5.png',
-            letterContent: '你好呀',
-            userName: '隔岸观火',
-            userId: 1,
-            sendTime: '2020-04-12 17:54:48'
-          })
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
+      if (this.refreshing) {
+        this.list = []
+        this.refreshing = false
+      }
+      this.$http
+        .post(`session/getUserList`, this.$qs.stringify())
+        .then(res => {
+          if (res.data.code === 0) {
+            this.list = this.list.concat(res.data.data)
+          } else {
+            this.Notify({ type: 'danger', message: res.data.msg })
+          }
+          console.log(res)
+        })
+      this.loading = false
+      this.finished = true
     },
     onRefresh () {
       // 清空列表数据
@@ -84,6 +80,9 @@ export default {
       // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
       this.onLoad()
+    },
+    toLetterItem (username, avatarUrl) {
+      this.$router.push({path: '/LetterItem', query: {userName: username, avatarUrl: avatarUrl}})
     }
   }
 }
