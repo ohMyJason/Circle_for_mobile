@@ -292,25 +292,39 @@ export default {
             }
             console.log(res)
           })
-      } else if (requestUrl === 'blog/searchBlogByContent' && this.targetBlogContent !== '') {
-        console.log(this.targetBlogContent)
-        console.log('2123')
-        this.$http
-          .post(requestUrl, this.$qs.stringify({
-            page: this.page,
-            size: 10,
-            content: this.targetBlogContent
-          }))
-          .then(res => {
-            if (res.data.code === 0) {
-              this.list = this.list.concat(res.data.data)
-            } else {
-              this.Notify({type: 'danger', message: '系统异常：' + res.data.msg})
-            }
-            console.log(res)
-          })
+      } else if (requestUrl === 'blog/searchBlogByContent') {
+        if (this.targetBlogContent === '') {
+          requestUrl = 'blog/showAllBlog'
+          this.$http
+            .post(requestUrl, this.$qs.stringify({
+              page: this.page,
+              size: 10
+            }))
+            .then(res => {
+              if (res.data.code === 0) {
+                this.list = this.list.concat(res.data.data)
+              } else {
+                this.Notify({type: 'danger', message: '系统异常：' + res.data.msg})
+              }
+              console.log(res)
+            })
+        } else {
+          this.$http
+            .post(requestUrl, this.$qs.stringify({
+              page: this.page,
+              size: 10,
+              content: this.targetBlogContent
+            }))
+            .then(res => {
+              if (res.data.code === 0) {
+                this.list = this.list.concat(res.data.data)
+              } else {
+                this.Notify({type: 'danger', message: '系统异常：' + res.data.msg})
+              }
+              console.log(res)
+            })
+        }
       } else {
-        requestUrl = 'blog/showAllBlog'
         this.$http
           .post(requestUrl, this.$qs.stringify({
             page: this.page,
@@ -320,7 +334,7 @@ export default {
             if (res.data.code === 0) {
               this.list = this.list.concat(res.data.data)
             } else {
-              this.Notify({type: 'danger', message: '系统异常：' + res.data.msg})
+              this.Notify({type: 'danger', message: res.data.msg})
             }
             console.log(res)
           })

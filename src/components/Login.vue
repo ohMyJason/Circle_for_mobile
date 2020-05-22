@@ -69,6 +69,7 @@ export default {
           if (res.data.code === 0) {
             this.$cookies.set('token', res.data.data.token, -1)
             this.$cookies.set('userId', res.data.data.user.userId, -1)
+            this.$cookies.set('userName', res.data.data.user.userName, -1)
             this.$router.push({ path: '/MainIndex' }) // post成功后跳到登录界面
           } else {
             this.Notify({ type: 'danger', message: res.data.msg })

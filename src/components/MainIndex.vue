@@ -5,7 +5,7 @@
 
         <van-row>
           <van-col span="8">
-            <van-tag round type="danger" style="margin:  0.15rem 0 0 0.1rem" @click="showHotCirclePopup">HotCircle</van-tag>
+            <van-tag color="#3C827E" round type="danger" style="margin:  0.15rem 0 0 0.1rem" @click="showHotCirclePopup">热门圈子</van-tag>
           </van-col>
           <van-col span="8"><img style="width: 1rem;margin-left: 0.1rem" src="../assets/logo.png" alt=""></van-col>
           <van-col span="4">
@@ -31,7 +31,7 @@
         <div class="circle-card" v-for="(hotCircleItem,index) in hotCircleList" :key="index"
              @click="toCircleItem(hotCircleItem.circleId)">
 
-          <van-row v-if="index<11">
+          <van-row v-if="index<8">
             <van-col span="7">
               <van-image width="0.5rem" height="0.5rem" :src="hotCircleItem.circleImg"/>
             </van-col>
@@ -93,7 +93,7 @@ export default {
         if (res.data.code === 0) {
           this.hotCircleList = res.data.data
         } else {
-          this.Notify({type: 'danger', message: '热门圈子获取错误'})
+          // this.Notify({type: 'danger', message: '热门圈子获取错误'})
         }
         console.log(res)
       })

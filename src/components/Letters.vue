@@ -34,6 +34,7 @@
 
       </van-list>
     </van-pull-refresh>
+    <div style="height: 1rem"></div>
     <Tabbar ></Tabbar>
 
   </div>
@@ -69,6 +70,7 @@ export default {
           }
           console.log(res)
         })
+
       this.loading = false
       this.finished = true
     },
@@ -84,6 +86,9 @@ export default {
     toLetterItem (username, avatarUrl) {
       this.$router.push({path: '/LetterItem', query: {userName: username, avatarUrl: avatarUrl}})
     }
+  },
+  created () {
+
   }
 }
 </script>

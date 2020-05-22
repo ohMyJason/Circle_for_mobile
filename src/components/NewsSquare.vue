@@ -14,8 +14,8 @@
       <van-tab title="原创动态">
         <UserNews :blogListType="'byOriginal'"></UserNews>
       </van-tab>
-      <van-tab title="热门圈子">
-        <CircleList></CircleList>
+      <van-tab title="圈子">
+        <CircleList></CircleList>·
       </van-tab>
     </van-tabs>
     <Tabbar></Tabbar>

@@ -214,7 +214,7 @@
     <van-tabbar>
       <van-row style="width: 100%">
         <van-col span="3">
-          <van-icon style="margin: 0.1rem 0 0 0.1rem" size="0.25rem" name="smile"/>
+          <van-icon style="margin: 0.1rem 0 0 0.1rem" size="0.25rem" name="comment-o"/>
         </van-col>
         <van-col span="17">
           <van-field
